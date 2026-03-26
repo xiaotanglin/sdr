@@ -23,6 +23,11 @@ sdr.gain_control_mode_chan0 = "slow_attack"
 sdr.gain_control_mode_chip_b_chan0 = "slow_attack"
 sdr.sample_rate = 1000000
 
+
+# Set single DDS tone for TX on one transmitter
+sdr.dds_single_tone(30000, 0.9)
+
+
 data=sdr.rx()
 
 sig = data[0]

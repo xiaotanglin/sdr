@@ -1,15 +1,13 @@
-
-import time
+#测试LPG2020A的模拟信号发生器
 
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy import signal
-
 import adi
 
 
 # Create radio
 sdr = adi.FMComms5(uri="ip:192.168.1.10")
+
 
 # Configure properties
 sdr.rx_lo = 2000000000
@@ -21,32 +19,31 @@ sdr.tx_hardwaregain_chan0 = -30
 sdr.tx_hardwaregain_chip_b_chan0 = -30
 sdr.gain_control_mode_chan0 = "slow_attack"
 sdr.gain_control_mode_chip_b_chan0 = "slow_attack"
-sdr.sample_rate = 1000000
+sdr.sample_rate = 30000000
+sdr.rx_buffer_size=32768
 
-
-# Set single DDS tone for TX on one transmitter
-sdr.dds_single_tone(30000, 0.9)
-
+sdr.rx_enabled_channels=[0]
+sdr.tx_enabled_channels=[]
 
 data=sdr.rx()
-
-sig = data[0]
-
-I=np.real(sig)
-Q=np.imag(sig)
+print(sdr.rx_buffer_size)
+I=np.real(data)
+Q=np.imag(data)
 
 plt.figure(figsize=(12, 6))
-
 plt.subplot(2,1,1)
 plt.plot(I, color='blue', linewidth=1)
 plt.title(f"channel {0} - I signal", fontsize=14)
+plt.subplot(2,1,2)
+plt.plot(Q, color='blue', linewidth=1)
+plt.title(f"channel {0} - Q signal", fontsize=14)
 plt.grid(True)
-plt.show()
+
 
 Fs=sdr.sample_rate
-
-fft_vals = np.fft.fft(sig)
-fft_freq = np.fft.fftfreq(1024,1/Fs)
+N = len(data)
+fft_vals = np.fft.fft(data)
+fft_freq = np.fft.fftfreq(N,1/Fs)
 fft_vals = np.fft.fftshift(fft_vals)
 fft_freq = np.fft.fftshift(fft_freq)
 

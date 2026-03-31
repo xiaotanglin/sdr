@@ -1,3 +1,6 @@
+#这是最早采集，只是采集IQ数据
+
+
 import adi
 import numpy as np
 import matplotlib.pyplot as plt

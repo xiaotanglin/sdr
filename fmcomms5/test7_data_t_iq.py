@@ -1,3 +1,5 @@
+#自己定义发送的数据，看看IQ两路是否接收会有差异
+
 import adi
 import numpy as np
 import matplotlib.pyplot as plt

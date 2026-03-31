@@ -1,4 +1,8 @@
+#测试打印信息
+
+
 import time
+
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -42,3 +46,15 @@ print(sdr.tx_enabled_channels)
 print(sdr.tx_channel_names)
 
 print(sdr._num_tx_channels_enabled)
+
+
+print (sdr.dds_scales)
+
+print (len(sdr.dds_scales))
+
+print(sdr.tx_channel_names)
+
+print(sdr.loopback)
+
+
+

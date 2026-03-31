@@ -1,48 +1,47 @@
-import adi
-import numpy as np
+#里面包含了IQ和fft
+import time
+
 import matplotlib.pyplot as plt
-# 1. 创建设备
+import numpy as np
+from scipy import signal
+
+import adi
+
+
+# Create radio
 sdr = adi.FMComms5(uri="ip:192.168.1.10")
 
-# 2. 基础配置
-sdr.sample_rate = 30720000  # 采样率 30.72M
-sdr.tx_lo = 2000000000      # 发射本振 2G
-sdr.rx_lo = 2000000000      # 接收本振 2G
-sdr.tx_cyclic_buffer = True # 循环发射
+# Configure properties
+sdr.rx_lo = 2000000000
+sdr.rx_lo_chip_b = 2000000000
+sdr.tx_lo = 2000000000
+sdr.tx_lo_chip_b = 2000000000
+sdr.tx_cyclic_buffer = True
+sdr.tx_hardwaregain_chan0 = -30
+sdr.tx_hardwaregain_chip_b_chan0 = -30
+sdr.gain_control_mode_chan0 = "slow_attack"
+sdr.gain_control_mode_chip_b_chan0 = "slow_attack"
+sdr.sample_rate = 1000000
 
-# 3. 只打开 1 个 TX 通道：TX0
-sdr.tx_enabled_channels = [0]
-# sdr.rx_enabled_channels = [0]
-# ==============================
-# 4. 生成 10MHz 复数信号（I=10M，Q=10M）
-# ==============================
-fc = 10000000  # 10MHz！！！
-fc2=5000000
-N = 1024
-ts = 1 / sdr.sample_rate
-t = np.arange(0, N * ts, ts)
 
-# I路 = 10MHz 余弦
-i = np.cos(2 * np.pi * t * fc) * 16384
-# Q路 = 10MHz 正弦
-q = np.sin(2 * np.pi * t * fc) * 16384
-
-# 组合成复数
-iq = i + 1j * q
-
-# 5. 发射（单通道直接传复数即可）
-sdr.tx(iq)
+# Set single DDS tone for TX on one transmitter
+sdr.dds_single_tone(30000, 0.9)
 
 
 data=sdr.rx()
 
 sig = data[0]
 
+I=np.real(sig)
+Q=np.imag(sig)
 
+plt.figure(figsize=(12, 6))
 
-sig=np.real(data[0])
-
-print(sig)
+plt.subplot(2,1,1)
+plt.plot(I, color='blue', linewidth=1)
+plt.title(f"channel {0} - I signal", fontsize=14)
+plt.grid(True)
+plt.show()
 
 Fs=sdr.sample_rate
 

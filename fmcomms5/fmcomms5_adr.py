@@ -3,6 +3,7 @@
 #
 # SPDX short identifier: ADIBSD
 
+#adi原始例程序
 import time
 
 import matplotlib.pyplot as plt

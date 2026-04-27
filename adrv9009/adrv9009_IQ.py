@@ -1,4 +1,4 @@
-
+#生成一个单频信号，然后画出IQ信号，并且画出FFT，计算频点和DB幅度。
 
 import matplotlib.pyplot as plt
 import numpy as np
